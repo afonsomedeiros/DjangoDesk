@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Home</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-3">
+        <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header font-weight-bold">Meus Chamados</div>
+            <div class="card-body">
+                <table class="table table-sm my-ticktsinfo font-weight-bold mx-auto">
+                    <tr>
+                        <td class="text-white">Campo:</td>
+                        <td class="text-white">{{meus.campo}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Pendentes:</td>
+                        <td class="text-white">{{meus.pendencia}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Concluídos:</td>
+                        <td class="text-white">{{meus.encerrado}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Total:</td>
+                        <td class="text-white">{{meus.total}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card text-white bg-info mb-3" style="max-width: 18rem;">
+            <div class="card-header font-weight-bold">Chamados do dia</div>
+            <div class="card-body">
+                <table class="table table-sm my-ticktsinfo font-weight-bold mx-auto">
+                    <tr>
+                        <td class="text-white">Campo:</td>
+                        <td class="text-white">{{ equipe.campo }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Pendentes:</td>
+                        <td class="text-white">{{ equipe.pendencia }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Concluídos:</td>
+                        <td class="text-white">{{ equipe.encerrado }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Total:</td>
+                        <td class="text-white">{{ equipe.total }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+            <div class="card-header font-weight-bold">Chamados da semana</div>
+            <div class="card-body">
+                <table class="table table-sm my-ticktsinfo font-weight-bold mx-auto">
+                    <tr>
+                        <td class="text-white">Campo:</td>
+                        <td class="text-white">{{ semana.campo }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Pendentes:</td>
+                        <td class="text-white">{{ semana.pendencia }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Concluídos:</td>
+                        <td class="text-white">{{ semana.encerrado }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Total:</td>
+                        <td class="text-white">{{ semana.total }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-3">
+        <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+            <div class="card-header font-weight-bold">Chamados do Mês</div>
+            <div class="card-body">
+                <table class="table table-sm my-ticktsinfo font-weight-bold mx-auto">
+                    <tr>
+                        <td class="text-white">Campo:</td>
+                        <td class="text-white">{{ mes.campo }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Pendentes:</td>
+                        <td class="text-white">{{ mes.pendencia }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Concluídos:</td>
+                        <td class="text-white">{{ mes.encerrado }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-white">Total:</td>
+                        <td class="text-white">{{ mes.total }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-4">
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+    <div class="col-4">
+        <canvas id="myChart2" width="400" height="400"></canvas>
+    </div>
+    <div class="col-4">
+        <canvas id="myChart3" width="400" height="400"></canvas>
+    </div>
+</div>
+
+{% endblock %}

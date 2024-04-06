@@ -1,0 +1,137 @@
+.breadcrumb {
+    background-color: #d7e3f7;
+    opacity: .9;
+    font-weight: bold;
+}
+
+.tr-border {
+    border-top: 1px solid rgba(0,0,0) !important;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists
+   will truncate terms that are too long to fit in the left column
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.nav-item a span{
+    font-size: 1rem;
+    color: rgba(200,200,200,.9);
+}
+
+.nav-item:hover a span{
+    color: rgba(255,255,255,.9);
+    font-size: 1.1rem;
+    text-decoration: underline;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/
+
+.icon-nav {
+    display: inline-block;
+    width: 20px;
+    margin-right: 5px;
+}
+
+/* Content body */
+.content-body {
+    padding-top: 25px;
+    padding-bottom: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #f0f5ff;
+    border-radius: 5px;
+    box-shadow: 2px 3px rgba(0,0,0,.3);
+}
+
+.my-ticktsinfo td, .my-ticktsinfo th {
+    border-top: none;
+    border-bottom: 1px solid rgba(255,255,255,.4);
+}
+
+.card {
+    padding: 0;
+}
+
+/* Voltar ao topo btn */
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+}
+
+/* tabela de usuários */
+
+.operacoes {
+    width: 100px;
+    height: 50px;
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.table-users {
+    max-height: 400px; max-width: 1024px; overflow-x: auto;
+}
+
+/*Pagination*/
+
+.pagination{
+    margin-bottom: 30px;
+}
+
+.first-page{
+    margin-right: 25px;
+}
+
+.last-page{
+    margin-left: 25px;
+}
+
+/* Search button */
+#search-btn{
+    cursor: pointer;
+}
+
+.modal {
+    z-index: 4000;
+}
+
+/**/
+
+@media (min-width:992px) {
+    /* Set padding to keep content from hitting the edges */
+    body{
+        padding-top: 40px;
+        background-color: #b9cdfa;
+    }
+}
+@media (max-width:991px) {
+    /* Set padding to keep content from hitting the edges */
+    body{
+        padding-top: 50px;
+        background-color: #b9cdfa;
+    }
+
+    .body-pages{
+        margin-top: 10px;
+    }
+}

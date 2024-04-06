@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Unidades - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Clientes</li>
+    </ol>
+</nav>
+<div class="row">
+	<div class="col-12">
+		<form class="form-inline" id="search-form" method="GET">
+			<label class="sr-only" for="search">Buscar</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<input type="text" class="form-control" id="search" name="search" placeholder="Buscar">
+				<div class="input-group-prepend">
+					<div class="input-group-text" id="">
+						<i class="fas fa-search" id="search-btn"></i>
+					</div>
+				</div>
+			</div>
+		</form>
+	<table class="table table-responsive talbe-bordered">
+		{% if empresas %}
+		<tr>
+			<th scope="col">Nome Fantasia</th>
+			<th scope="col">CNPJ</th>
+			<th scope="col">Situação</th>
+            <th scope="col">Sistemas</th>
+            <th scope="col">Operações</th>
+            <th scope="col"></th>
+		</tr>
+			{% for empresa in empresas %}
+				<tr>
+					<td data-toggle="tooltip" data-placement="top" title="Razão Social: {{empresa.razao_social}}">{{empresa.nome_fantasia}}</td>
+					<td>{{empresa.CNPJ}}</td>
+					<td>
+						{% if empresa.situacao == 'ativo' %}
+							<span class="text-success font-weight-bold"><i class="fas fa-check-circle"></i> {{empresa.situacao}}</span>
+						{% endif %}
+						{% if empresa.situacao == 'inadimplente' %}
+							<span class="text-warning font-weight-bold"><i class="fas fa-check-circle"></i> {{empresa.situacao}}</span>
+						{% endif %}
+						{% if empresa.situacao == 'cancelado' %}
+							<span class="text-danger font-weight-bold"><i class="fas fa-check-circle"></i> {{empresa.situacao}}</span>
+						{% endif %}
+					</td>
+                    <td>{{empresa.sistema}}</td>
+					<td class="operacoes">
+						<a href="/empresas/atualizar/{{empresa.id}}" class="text-success">
+							<i class="far fa-edit"></i>
+						</a> |
+						<a href="/empresas/visualizar/{{empresa.id}}" class="text-info">
+							<i class="fas fa-eye"></i>
+						</a> |
+						<!--<a href="/empresas/deletar/{{empresa.id}}" class="text-danger delete-btn" rel="{{empresa.nome_fantasia}}" data-toggle="tooltip" data-placement="top" title="Recurso ainda não disponível.">-->
+						<a href="/empresas/deletar/{{empresa.id}}" class="text-danger delete-btn" rel="{{empresa.nome_fantasia}}">
+							<i class="fas fa-trash-alt"></i>
+						</a>
+					</td>
+					<td class="">
+						<a href="/tickets/novo?cliente_id={{empresa.id}}" class="btn btn-sm btn-secondary"><i class="fas fa-plus-circle"></i> Ticket</a>
+					</td>
+					<td>
+						<a href="/tickets/visualizar?cliente_id={{empresa.id}}" class="btn btn-sm btn-secondary"><i class="fas fa-eye"></i> tickets</a>
+					</td>
+				</tr>
+			{% endfor %}
+		{% endif %}
+	</table>
+	</div>
+	<div class="col-12">
+		<a href="/empresas/cadastrar" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i> Cadastrar</a>
+	</div>
+</div>
+
+{% endblock %}

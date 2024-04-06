@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block title %}Novo Ticket - Django Desk{% endblock %}
+
+{% block content %}
+
+<style type="text/css">
+    #assunto_ticket {
+        min-width: 100%;
+        border: 2px solid rgba(100, 170, 78, 0.6);
+    }
+    #descricao_ticket {
+        min-width: 100%;
+        min-height: 100px;
+        border: 2px solid rgba(100, 170, 78, 0.6);
+    }
+    #assunto_ticket:focus, #descricao_ticket:focus {
+        border: none;
+    }
+    label{
+        font-weight: bolder;
+    }
+    .ticket-form{
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid rgba(0,0,0,.2);
+    }
+
+    .tickets-table {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid rgba(0,0,0,.2);
+        box-shadow: 1px;
+        margin-top: 10px;
+    }
+
+    .list-group{
+        border: 0;
+    }
+    .cliente-info{
+        border-radius: 5px;
+        border: 1px solid rgba(0,0,0,.2);
+    }
+    .error{
+        font-weight: bold;
+        font-size: 8pt;
+        color: rgba(255,30,30,.8);
+        opacity: .8;
+    }
+</style>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+    	<li class="breadcrumb-item" aria-current="page">
+            <a href="/">Home</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">
+            <a href="/tickets">Tickets</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Novo Ticket</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-12 col-sm-5 col-md-5 col-lg-5">
+        <ul class="list-group cliente-info">
+            <li class="list-group-item">
+                <span class="font-weight-bold">Nome Fantasia:</span> <span class="float-right">{{empresa.nome_fantasia}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="font-weight-bold">Razão Social:</span> <span class="float-right">{{empresa.razao_social}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="font-weight-bold">CNPJ:</span> <span class="float-right">{{empresa.CNPJ}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="font-weight-bold">Sistema:</span> <span class="sistema_ticket float-right" id="{{empresa.sistema.id}}">{{empresa.sistema.nome}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="font-weight-bold">Unidade:</span> <span class="unidade_ticket float-right" id="{{empresa.unidade.id}}">{{empresa.unidade.nome}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="font-weight-bold">Telefone:</span> <span class="float-right">{{empresa.telefone}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="font-weight-bold">Situação:</span> 
+                <span class="float-right">
+                {% if empresa.situacao == 'ativo' %}
+                    <span class="text-success font-weight-bold"><i class="fas fa-check-circle"></i> {{empresa.situacao}}</span>
+                {% endif %}
+                {% if empresa.situacao == 'inadimplente' %}
+                    <span class="text-warning font-weight-bold"><i class="fas fa-check-circle"></i> {{empresa.situacao}}</span>
+                {% endif %}
+                {% if empresa.situacao == 'cancelado' %}
+                    <span class="text-danger font-weight-bold"><i class="fas fa-check-circle"></i> {{empresa.situacao}}</span>
+                {% endif %}
+                </span>
+            </li>
+        </ul>
+        <div class="tickets_antigos">
+            <table class="table table-borderless table-responsive table-users tickets-table">
+                <tr>
+                    <th scope="col">Assunto.</th>
+                    <th scope="col">Estado.</th>
+                </tr>
+                {% if tickets %}
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td class="nome">
+                            <!--<a href="/tickets/visualizar/{{ticket.id}}" class="text-info">-->
+                            <a href="#" data-toggle="modal" data-target="#ModalTicket" id="show_modal_ticket" onclick="show_modal_ticket( {{ticket.id}} )" class="text-info">
+                                {{ ticket.assunto }}
+                            </a>
+                        </td>
+                        <td class="nome">{{ ticket.estado.nome }}</td>
+                        <td class="registrado_em">{{ ticket.registrado_em }}</td>
+                        <td class="operacoes">
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+    </div>
+    <div class="col-12 col-sm-7 col-md-7 col-lg-7">
+    	<form method="POST" class="ticket-form">
+    		{% csrf_token %}
+    		<div class="form-row">
+                <div class="form-group col-md-6 mb-4">
+                    <label for="contato_ticket">Contato: </label>
+                    <input type="text" class="form-control" id="contato_ticket" name="contato_ticket" required />
+                </div>
+                <div class="form-group col-md-6 mb-4">
+                    <label for="telefone_ticket">Telefone contato: </label>
+                    <input type="text" class="form-control" id="telefone_ticket" name="telefone_ticket" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4 mb-4">
+                	<label>Categorias:</label>
+                    <select class="form-control" id="categorias_ticket" name="categorias_ticket" required>
+                        <option>Selecione uma categoria</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 mb-4">
+                    <label>Subcategorias:</label>
+                    <select class="form-control" id="subcategorias_ticket" name="subcategorias_ticket" required>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 mb-4">
+                    <label>Classificações:</label>
+                    <select class="form-control" id="classificacoes_ticket" name="classificacoes_ticket" required>
+                    </select>
+                </div>
+                <div class="form-group col-md-5 mb-4">
+                    <label>Operações:</label>
+                    <select class="form-control" id="operacoes_ticket" name="operacoes_ticket" required>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 mb-4">
+                    <label>Estados:</label>
+                    <select class="form-control col-12" id="estados_ticket_new" name="estados_ticket" required>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 mb-2">
+                    <label>Assunto:</label>
+                    <input type="text" class="form-control" id="assunto_ticket" name="assunto_ticket" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-lg-12 mb-4">
+                    <label>Descrição:</label>
+                    <textarea class="form-control" style="" id="descricao_ticket" name="descricao_ticket" required></textarea>
+                </div>
+            </div>
+
+            <input type="text" name="unidade_ticket" id="unidade_ticket" value="{{empresa.unidade.id}}" readonly hidden>
+            <input type="text" name="empresa_ticket" id="empresa_ticket" value="{{empresa.id}}" readonly hidden>
+            <input type="submit" value="Registrar" class="btn btn-success bt-registrar" disabled />
+    	</form>
+    </div>
+</div>
+<div class="modal fade" id="ModalTicket" tabindex="-1" role="dialog" aria-labelledby="TituloModalTicket" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="TituloModalTicket">Ticket <span id="ticket_id"></span></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<table class="table">
+					<tr>
+						<td>Aberto por:</td><td class="font-weight-bold" id="nome_usuario"></td>
+						<td>Para:</td><td class="font-weight-bold" id="empresa_nome"></td>
+						<td class="font-weight-bold" id="empresa_cnpj"></td>
+					</tr>
+					<tr>
+						<td>Contato:</td><td class="font-weight-bold" id="nome_contato"></td>
+						<td>telefone:</td><td class="font-weight-bold" id="telefone_contato"></td>
+						<td class="font-weight-bold" id="unidade_nome"></td>
+					</tr>
+				</table>
+				<table class="table">
+					<tr>
+						<th>Categoria</td>
+						<th>Subcategoria</td>
+						<th>Classificação</td>
+						<th>Operação</td>
+						<th>Estado Atual</td>
+					</tr>
+					<tr>
+						<td id="categoria"></td>
+						<td id="subcategoria"></td>
+						<td id="classificacao"></td>
+						<td id="operacao"></td>
+						<td id="estado"></td>
+					</tr>
+				</table>
+				<div class="container-interacoes row" style="max-height: 400px; overflow-x: auto;">
+					<div class="interacoes col-11 mx-auto">
+					</div>
+				</div>
+				<div class="form-interacao">
+					<form id="form-nova-interacao">
+						{% csrf_token %}
+						<div class="form-group col-md-12 mb-4">
+		                    <label for="estados_ticket">Estados:</label>
+		                    <select class="form-control" id="estados_ticket" name="estados_ticket" required>
+		                    </select>
+		                </div>
+						<div class="form-group col-md-12 mb-4">
+							<label for="descricao_interacao">Descricao: </label>
+							<textarea type="text" class="form-control" id="descricao_interacao" name="descricao_interacao" required ></textarea>
+							<input type="submit" class="btn btn-secondary mt-2" value="Enviar Interação" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

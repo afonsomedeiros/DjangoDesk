@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Sistemas - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Sistemas</li>
+    </ol>
+</nav>
+<div class="row">
+	<div class="col-12">
+		<form class="form-inline" id="search-form" method="GET">
+			<label class="sr-only" for="search">Buscar</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<input type="text" class="form-control" id="search" name="search" placeholder="Buscar">
+				<div class="input-group-prepend">
+					<div class="input-group-text" id="">
+						<i class="fas fa-search" id="search-btn"></i>
+					</div>
+				</div>
+			</div>
+		</form>
+	<table class="table table-responsive talbe-bordered, table-user">
+		{% if sistemas %}
+		<tr>
+			<th scope="col">Nome</th>
+			<th scope="col">Descrição</th>
+			<th scope="col">Ativo?</th>
+			<th scope="col">Operações</th>
+		</tr>
+			{% for sistema in sistemas %}
+				<tr>
+					<td>{{sistema.nome}}</td>
+					<td>{{sistema.descricao}}</td>
+					<td>{% if not sistema.ativo %}
+						<span class="text-danger">
+							<i class="fas fa-minus-circle"></i>
+						</span>
+						{% else %}
+						<span class="text-success">
+							<i class="fas fa-plus-circle"></i>
+						</span>
+						{% endif %}</td>
+					<td class="operacoes">
+						<a href="/sistemas/atualizar/{{sistema.id}}" class="text-success">
+							<i class="far fa-edit"></i>
+						</a> |
+						<!--<a href="/sistemas/deletar/{{sistema.id}}" class="text-danger delete-btn" rel="{{sistema.nome}}" data-toggle="tooltip" data-placement="top" title="Recurso ainda não disponível.">-->
+						<a href="/sistemas/deletar/{{sistema.id}}" class="text-danger delete-btn" rel="{{sistema.nome}}">
+							<i class="fas fa-trash-alt"></i>
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		{% endif %}
+	</table>
+		<div class="pagination">
+				<span class="step-links">
+					{% if  sistemas.has_previous %}
+					<span class="first-page">
+						<a href="?page=1">Primeira</a>
+					</span>
+
+						<a href="?page={{sistemas.previous_page_number}}"><i class="fas fa-arrow-circle-left"></i></a>
+					{% endif %}
+					<span class="current">
+						{{sistemas.number}} de {{sistemas.paginator.num_pages}}
+					</span>
+					{% if sistemas.has_next %}
+						<a href="?page={{sistemas.next_page_number}}"><i class="fas fa-arrow-circle-right"></i></a>
+
+					<span class="last-page">
+						<a href="?page={{sistemas.paginator.num_pages}}">Última</a>
+					</span>
+					{% endif %}
+				</span>
+			</div>
+	</div>
+	<div class="col-12">
+		<a href="/sistemas/cadastrar" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i> Cadastrar</a>
+	</div>
+</div>
+
+{% endblock %}

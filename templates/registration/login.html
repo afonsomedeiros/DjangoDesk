@@ -1,0 +1,44 @@
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Site para administração de de atendimentos do Help Desk">
+    <meta name="author" content="Afonso Medeiros">
+    <title>DjangoDesk - Login</title>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+    </style>
+
+    <link href="{% static 'css/bootstrap/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom/Site.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom/login.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome/all.css' %}" rel="stylesheet">
+</head>
+<body>
+
+<div class="container vertical-center">
+            <div class="login-form">
+                <form method="POST">
+                    <div class="h4 text-center">Login - DjangoDesk</div>
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{next}}">
+                    {{ form|crispy }}
+                    <input type="submit" value="Entrar" class="btn btn-primary">
+                </form>
+            </div>
+</div>
+    <script src="{% static 'js/jquery/popper.js' %}" rel="stylesheet"></script>
+    <script src="{% static 'js/jquery/jquery-3.4.1.js' %}" rel="stylesheet"></script>
+    <script src="{% static 'js/bootstrap/bootstrap.js' %}" rel="stylesheet"></script>
+</body>
+
+</html>

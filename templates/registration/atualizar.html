@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Atualizar usuário - Django Desk{% endblock %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+    	<li class="breadcrumb-item" aria-current="page">
+            <a href="/">Home</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">
+            <a href="/usuarios">Usuários</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Atualizar</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-12 col-sm-10 col-md-6 col-6">
+    	<form method="POST">
+	        <div class="h4 text-center">Cadastro - DjangoDesk</div>
+		        {% csrf_token %}
+		        <input type="hidden" name="next" value="{{next}}">
+				<div class="form-row">
+					<div class="form-group col-md-6 mb-0">
+						{{ form.nome|as_crispy_field }}
+					</div>
+					<div class="form-group col-md-6 mb-0">
+						{{ form.sobrenome|as_crispy_field }}
+					</div>
+				</div>
+				{{ form.email|as_crispy_field }}
+				<div class="form-row">
+					<div class="form-group col-md-6 mb-0">
+						{{ form.nascimento|as_crispy_field }}
+						<small id="passwordHelpBlock" class="form-text text-muted">
+							Seguir o formato <span class="font-italic">"dia/mês/ano"</span>
+						</small>
+					</div>
+					<div class="form-group col-md-6 mb-0">
+						{{ form.is_active|as_crispy_field }}
+						{{ form.is_staff|as_crispy_field }}
+						{{ form.is_admin|as_crispy_field }}
+					</div>
+				</div>
+				{{ form.unidade|as_crispy_field }}
+	        <input type="submit" value="Atualizar" class="btn btn-primary">
+        </form>
+     </div>
+     <div class="col-12 col-sm-10 col-md-6 col-6">
+     	{% if error %}
+     		<p>{{error}}</p>
+     	{% endif %}
+     </div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#id_unidade").addClass("col-12");
+	});
+</script>
+{% endblock %}

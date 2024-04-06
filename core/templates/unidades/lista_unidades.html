@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Unidades - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Unidades</li>
+    </ol>
+</nav>
+<div class="row">
+	<div class="col-12">
+		<form class="form-inline" id="search-form" method="GET">
+			<label class="sr-only" for="search">Buscar</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<input type="text" class="form-control" id="search" name="search" placeholder="Buscar">
+				<div class="input-group-prepend">
+					<div class="input-group-text" id="">
+						<i class="fas fa-search" id="search-btn"></i>
+					</div>
+				</div>
+			</div>
+		</form>
+	<table class="table table-responsive talbe-bordered">
+		{% if unidades %}
+		<tr>
+			<th scope="col">Nome</th>
+			<th scope="col">Endereco</th>
+			<th scope="col">Telefone</th>
+			<th scope="col">Operações</th>
+			<th scope="col">Lista de ramais</th>
+		</tr>
+			{% for unidade in unidades %}
+				<tr>
+					<td>{{unidade.nome}}</td>
+					<td>{{unidade.endereco}}</td>
+					<td>{{unidade.telefone}}</td>
+					<td class="operacoes">
+						<a href="/unidades/atualizar/{{unidade.id}}" class="text-success">
+							<i class="far fa-edit"></i>
+						</a> |
+						<!--<a href="/unidades/deletar/{{unidade.id}}" class="text-danger delete-btn" rel="{{unidade.nome}}" data-toggle="tooltip" data-placement="top" title="Recurso ainda não disponível.">-->
+						<a href="/unidades/deletar/{{unidade.id}}" class="text-danger delete-btn" rel="{{unidade.nome}}">
+							<i class="fas fa-trash-alt"></i>
+						</a>
+					</td>
+					<td>
+						<button type="button" class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#ModalRamais" id="show_modal_ramais" onclick="show_modal_ramal({{unidade.id}});">
+							Ramais
+						</button>
+					</td>
+				</tr>
+			{% endfor %}
+		{% endif %}
+	</table>
+		<div class="pagination">
+				<span class="step-links">
+					{% if  unidades.has_previous %}
+					<span class="first-page">
+						<a href="?page=1">Primeira</a>
+					</span>
+
+						<a href="?page={{unidades.previous_page_number}}"><i class="fas fa-arrow-circle-left"></i></a>
+					{% endif %}
+					<span class="current">
+						{{unidades.number}} de {{unidades.paginator.num_pages}}
+					</span>
+					{% if unidades.has_next %}
+						<a href="?page={{unidades.next_page_number}}"><i class="fas fa-arrow-circle-right"></i></a>
+
+					<span class="last-page">
+						<a href="?page={{unidades.paginator.num_pages}}">Última</a>
+					</span>
+					{% endif %}
+				</span>
+			</div>
+	</div>
+	<div class="col-12">
+		<a href="/unidades/cadastrar" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i> Cadastrar</a>
+	</div>
+</div>
+
+<div class="modal fade" id="ModalRamais" tabindex="-1" role="dialog" aria-labelledby="TituloModalRamais" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="TituloModalRamais">Lista de Ramais</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<table class="table" id="lista_ramais">
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

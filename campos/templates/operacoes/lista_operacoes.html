@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Unidades - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="/campos">Campos</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Operações</li>
+    </ol>
+</nav>
+<div class="row">
+	<div class="col-12">
+		<form class="form-inline" id="search-form" method="GET">
+			<label class="sr-only" for="search">Buscar</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<input type="text" class="form-control" id="search" name="search" placeholder="Buscar">
+				<div class="input-group-prepend">
+					<div class="input-group-text" id="">
+						<i class="fas fa-search" id="search-btn"></i>
+					</div>
+				</div>
+			</div>
+		</form>
+		<table class="table table-responsive talbe-bordered">
+			{% if operacoes %}
+			<tr>
+				<th scope="col">Nome</th>
+				<th scope="col">Classificação</th>
+				<th scope="col">Ativo?</th>
+				<th scope="col">Operações</th>
+			</tr>
+				{% for operacao in operacoes %}
+					<tr>
+						<td>{{operacao.nome}}</td>
+						<td>
+							{% for classificacao in operacao.classificacao.all %}
+								<li>{{classificacao}}</li>
+							{% endfor %}
+						</td>
+						<td>
+							{% if not operacao.ativo %}
+							<span class="text-danger">
+								<i class="fas fa-minus-circle"></i>
+							</span>
+							{% else %}
+							<span class="text-success">
+								<i class="fas fa-plus-circle"></i>
+							</span>
+							{% endif %}
+						</td>
+						<td class="operacoes">
+							<a href="/campos/operacoes/atualizar/{{operacao.id}}" class="text-success">
+								<i class="far fa-edit"></i>
+							</a> |
+							<!--<a href="/campos/operacoes/deletar/{{categoria.id}}" class="text-danger delete-btn" rel="{{operacao.nome}}" data-toggle="tooltip" data-placement="top" title="Recurso ainda não disponível.">-->
+							<a href="/campos/operacoes/deletar/{{operacao.id}}" class="text-danger delete-btn" rel="{{operacao.nome}}">
+								<i class="fas fa-trash-alt"></i>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+		</table>
+			<div class="pagination">
+				<span class="step-links">
+					{% if  operacoes.has_previous %}
+					<span class="first-page">
+						<a href="?page=1">Primeira</a>
+					</span>
+
+						<a href="?page={{operacoes.previous_page_number}}"><i class="fas fa-arrow-circle-left"></i></a>
+					{% endif %}
+					<span class="current">
+						{{operacoes.number}} de {{operacoes.paginator.num_pages}}
+					</span>
+					{% if operacoes.has_next %}
+						<a href="?page={{operacoes.next_page_number}}"><i class="fas fa-arrow-circle-right"></i></a>
+
+					<span class="last-page">
+						<a href="?page={{operacoes.paginator.num_pages}}">Última</a>
+					</span>
+					{% endif %}
+				</span>
+			</div>
+	</div>
+	<div class="col-12">
+		<a href="/campos/operacoes/cadastrar" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i> Cadastrar</a>
+	</div>
+</div>
+
+{% endblock %}

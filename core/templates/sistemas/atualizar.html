@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Atualizar Sistema - Django Desk{% endblock %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+    	<li class="breadcrumb-item" aria-current="page">
+            <a href="/">Home</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">
+            <a href="/sistemas">Sistemas</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Atualizar</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-12 col-sm-10 col-md-6 col-6">
+    	<form method="POST">
+    		{% csrf_token %}
+    		<div class="form-row">
+                <div class="form-group col-md-12 mb-0">
+                    {{ form.nome|as_crispy_field }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 mb-0">
+                    {{ form.descricao|as_crispy_field }}
+                </div>
+            </div>
+            {{ form.ativo|as_crispy_field }}
+    		<input type="submit" value="Atualizar" class="btn btn-primary" />
+    	</form>
+	</div>
+</div>
+
+{% endblock %}

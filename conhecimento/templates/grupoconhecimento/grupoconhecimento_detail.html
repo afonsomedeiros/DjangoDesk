@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{object.titulo}} - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="/conhecimento">Conhecimento</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Visualizar conhecimento</li>
+    </ol>
+</nav>
+<div class="row">
+	<div class="col-12">
+		<p>
+			{{object.conteudo|safe}}
+		</p>
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Unidades - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Conhecimentos</li>
+    </ol>
+</nav>
+
+<div class="row">
+	<div class="col-12">
+		<form class="form-inline" id="search-form" method="GET">
+			<label class="sr-only" for="search">Buscar</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<input type="text" class="form-control" id="search" name="search" placeholder="Buscar">
+				<div class="input-group-prepend">
+					<div class="input-group-text" id="">
+						<i class="fas fa-search" id="search-btn"></i>
+					</div>
+				</div>
+			</div>
+		</form>
+		<table class="table table-responsive talbe-bordered w-100">
+			{% if object_list %}
+			<tr>
+				<th scope="col">Nome</th>
+				<th scope="col">Sistemas</th>
+				<th scope="col">Categorias</th>
+				<th scope="col">Subcategorias</th>
+				<th scope="col">Classificação</th>
+				<th scope="col">Operações</th>
+				<th scope="col">Operações Adm</th>
+			</tr>
+				{% for grupoConhetimento in object_list %}
+					<tr>
+						<td>{{grupoConhetimento.nome}}</td>
+						<td>
+							{% if not grupoConhetimento.ativo %}
+							<span class="text-danger">
+								<i class="fas fa-minus-circle"></i>
+							</span>
+							{% else %}
+							<span class="text-success">
+								<i class="fas fa-plus-circle"></i>
+							</span>
+							{% endif %}
+						</td>
+						<td>{{grupoConhetimento.categoria.nome}}</td>
+						<td>{{grupoConhetimento.subcategoria.nome}}</td>
+						<td>{{grupoConhetimento.classificacao.nome}}</td>
+						<td>{{grupoConhetimento.operacao.nome}}</td>
+						<td class="operacoes">
+							<a href="/grupoconhecimento/atualizar/{{grupoConhetimento.id}}" class="text-success">
+								<i class="far fa-edit"></i>
+							</a> |
+							<a href="/grupoconhecimento/visualizar/{{grupoConhetimento.id}}" class="text-info">
+								<i class="fas fa-eye"></i>
+							</a> |
+							<a href="/grupoconhecimento/deletar/{{grupoConhetimento.id}}" class="text-danger delete-btn" rel="{{grupoConhetimento.nome}}">
+								<i class="fas fa-trash-alt"></i>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+		</table>
+			<div class="pagination">
+				<span class="step-links">
+					{% if  page_obj.has_previous %}
+					<span class="first-page">
+						<a href="?page=1">Primeira</a>
+					</span>
+
+						<a href="?page={{page_obj.previous_page_number}}"><i class="fas fa-arrow-circle-left"></i></a>
+					{% endif %}
+					<span class="current">
+						{{page_obj.number}} de {{page_obj.paginator.num_pages}}
+					</span>
+					{% if page_obj.has_next %}
+						<a href="?page={{page_obj.next_page_number}}"><i class="fas fa-arrow-circle-right"></i></a>
+					<span class="last-page">
+						<a href="?page={{page_obj.paginator.num_pages}}">Última</a>
+					</span>
+					{% endif %}
+				</span>
+			</div>
+	</div>
+	<div class="col-12">
+		<a href="/conhecimento/grupoconhecimento/novo" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i> Cadastrar</a>
+	</div>
+</div>
+
+{% endblock %}

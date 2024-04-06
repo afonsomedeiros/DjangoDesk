@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Unidades - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Campos</li>
+    </ol>
+</nav>
+
+<div class="row">
+	<div class="col-4">
+		<ul class="list-group">
+			<li class="list-group-item list-group-item-action"><a href="/campos/categorias">Categorias</a></li>
+			<li class="list-group-item list-group-item-action"><a href="/campos/subcategorias">Subcategorias</a></li>
+			<li class="list-group-item list-group-item-action"><a href="/campos/classificacoes">Classificações</a></li>
+			<li class="list-group-item list-group-item-action"><a href="/campos/operacoes">Operações</a></li>
+			<li class="list-group-item list-group-item-action"><a href="/campos/estados">Estados</a></li>
+		</ul>
+	</div>
+</div>
+
+{% endblock %}

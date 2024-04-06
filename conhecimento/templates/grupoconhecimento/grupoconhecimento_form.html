@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Conhecimentos - Django Desk{% endblock %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<style type="text/css">
+    .django-ckeditor-widget{
+        width: 100%;
+    }
+</style>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+    	<li class="breadcrumb-item" aria-current="page">
+            <a href="/">Home</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">
+            <a href="/conhecimento/grupoconhecimento">Grupo Conhecimento</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Novo</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-6">
+        <form method="POST">
+            <div class="h4 text-center">Cadastro - DjangoDesk</div>
+                {% csrf_token %}
+                {{ form|crispy }}
+            <input type="submit" value="Registrar" class="btn btn-primary">
+        </form>
+     </div>
+</div>
+
+
+{% endblock %}

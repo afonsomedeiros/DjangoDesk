@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Tickets - Django Desk{% endblock %}
+
+{% block content %}
+
+<style type="text/css">
+	table {
+    	table-layout: fixed;
+    	width: 100%;
+	}
+
+	table td {
+	    word-wrap: break-word;         /* All browsers since IE 5.5+ */
+	    overflow-wrap: break-word;     /* Renamed property in CSS3 draft spec */
+	}
+
+	.lista_filtros{
+		border: 1px solid rgba(0,0,80,.2);
+		border-radius: 2px;
+		padding: 10px;
+		background-color: #eef;
+		height: 100%;
+	}
+
+	#estados_ticket {
+		min-width: 50%;
+	}
+
+	#descricao_interacao {
+        min-width: 50%;
+        min-height: 100px;
+        border: 2px solid rgba(100, 170, 78, 0.6);
+    }
+
+	.filter-button {
+		color: rgb(0,0,0);
+		font-weight: bold;
+		text-decoration: underline;
+		margin-left: 20px;
+	}
+
+	.filter-button:visited {
+		color: rgb(0,0,0);
+	}
+
+	ul {
+  		list-style-type: none;
+	}
+
+	li a{
+		color: rgb(0,0,0);
+	}
+	li a:visited{
+		color: rgb(0,0,0);
+	}
+
+	.filtro {
+		margin-bottom: 10px;
+	}
+
+	.row-iteracoes{
+		padding-top: 10px;
+		border-bottom: 1px solid rgba(0,0,0,.3);
+	}
+</style>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Tickets</li>
+    </ol>
+</nav>
+
+<div class="row">
+	<div class="col-9">
+		<form class="form-inline" action="/tickets" id="search-form" method="GET">
+			<label class="sr-only" for="search">Buscar</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<input type="text" class="form-control" id="search" name="search" placeholder="Buscar">
+				<div class="input-group-prepend">
+					<div class="input-group-text" id="">
+						<i class="fas fa-search" id="search-btn"></i>
+					</div>
+				</div>
+			</div>
+			{% if param_busca %}
+				<label>Conteúdo da busca: <span class="font-weight-bold ml-2">{{param_busca}}</span></label>
+			{% endif %}
+		</form>
+		<table class="table table-borderless table-responsive table-users">
+			<tr>
+				<th scope="col">Cod.</th>
+				<th scope="col">Assunto.</th>
+				<th scope="col">Aberto em:</th>
+				<th scope="col">Estado.</th>
+			</tr>
+			{% if tickets %}
+				{% for ticket in tickets %}
+				<tr>
+					<td class="nome">{{ ticket.id }}</td>
+					<td class="nome">
+						<!--<a href="/tickets/visualizar/{{ticket.id}}" class="text-info">-->
+						<a href="#" data-toggle="modal" data-target="#ModalTicket" id="show_modal_ticket" onclick="show_modal_ticket( {{ticket.id}} )" class="text-info">
+							{{ ticket.assunto }}
+						</a>
+					</td>
+					<td class="nome">{{ ticket.registrado_em }}</td>
+					<td class="nome">{{ ticket.estado.nome }}</td>
+					<td class="operacoes">
+				</tr>
+				{% endfor %}
+			{% endif %}
+		</table>
+		<div class="pagination">
+			<span class="step-links">
+				{% if  tickets.has_previous %}
+				<span class="first-page">
+					<a href="?page=1">Primeira</a>
+				</span>
+
+					<a href="?page={{tickets.previous_page_number}}"><i class="fas fa-arrow-circle-left"></i></a>
+				{% endif %}
+				<span class="current">
+					{{tickets.number}} de {{tickets.paginator.num_pages}}
+				</span>
+				{% if tickets.has_next %}
+					<a href="?page={{tickets.next_page_number}}"><i class="fas fa-arrow-circle-right"></i></a>
+
+				<span class="last-page">
+					<a href="?page={{tickets.paginator.num_pages}}">Última</a>
+				</span>
+				{% endif %}
+			</span>
+		</div>
+	</div>
+	<div class="col-3">
+		<div class="container-filters lista_filtros">
+			<div class="h6">Filtros</div>
+			<div class="row filtro">
+			{% if estados %}
+			<div class="col-12">
+				<a class="mr-auto filter-button" data-toggle="collapse" href="#collapseEstado" role="button" aria-expanded="false" aria-controls="collapseEstado">Estados</a>
+			</div>
+			<div class="collapse col-12" id="collapseEstado">
+				<ul class="mb-2 pb=1">
+					{% for estado in estados %}
+						<li>
+							<a href="/tickets/estados?estado={{estado.id}}&param_busca={{estado.nome}}">{{estado.nome}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			</div>
+			<div class="row filtro">
+			{% if categorias %}
+			<div class="col-12">
+				<a class="mr-auto filter-button" data-toggle="collapse" href="#collapseCategoria" role="button" aria-expanded="false" aria-controls="collapseCategoria">Categorias</a>
+			</div>
+			<div class="collapse col-12" id="collapseCategoria">
+				<ul class="mb-2 pb=1">
+					{% for categoria in categorias %}
+						<li>
+							<a href="/tickets/categorias?categoria={{categoria.id}}&param_busca={{categoria.nome}}">{{categoria.nome}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			</div>
+			<div class="row filtro">
+			{% if subcategorias %}
+			<div class="col-12">
+				<a class="mr-auto filter-button" data-toggle="collapse" href="#collapseSubcategoria" role="button" aria-expanded="false" aria-controls="collapseSubcategoria">Subcategorias</a><br />
+			</div>
+			<div class="collapse col-12" id="collapseSubcategoria">
+				<ul class="mb-2 pb=1">
+					{% for subcategoria in subcategorias %}
+						<li>
+							<a href="/tickets/subcategorias?subcategoria={{subcategoria.id}}&param_busca={{subcategoria.nome}}">{{subcategoria.nome}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			</div>
+			<div class="row filtro">
+			{% if classificacoes %}
+			<div class="col-12">
+				<a class="mr-auto filter-button" data-toggle="collapse" href="#collapseClassificacao" role="button" aria-expanded="false" aria-controls="collapseClassificacao">Classificações</a><br>
+			</div>
+			<div class="collapse col-12" id="collapseClassificacao">
+				<ul class="mb-2 pb=1">
+					{% for classificacao in classificacoes %}
+						<li>
+							<a href="/tickets/classificacoes?classificacao={{classificacao.id}}&param_busca={{classificacao.nome}}">{{classificacao.nome}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			</div>
+			<div class="row filtro">
+			{% if operacoes %}
+			<div class="col-12">
+				<a class="mr-auto filter-button" data-toggle="collapse" href="#collapseOperacao" role="button" aria-expanded="false" aria-controls="collapseOperacao">Operações</a><br>
+			</div>
+			<div class="collapse col-12" id="collapseOperacao">
+				<ul class="mb-2 pb=1">
+					{% for operacao in operacoes %}
+						<li>
+							<a href="/tickets/operacoes?operacao={{operacao.id}}&param_busca={{operacao.nome}}">{{operacao.nome}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			</div>
+			<div class="row filtro">
+			{% if sistemas %}
+			<div class="col-12">
+				<a class="mr-auto filter-button" data-toggle="collapse" href="#collapseSistema" role="button" aria-expanded="false" aria-controls="collapseSistema">Sistemas</a><br>
+			</div>
+			<div class="collapse col-12" id="collapseSistema">
+				<ul class="mb-2 pb=1">
+					{% for sistema in sistemas %}
+						<li>
+							<a href="/tickets/sistemas?sistema={{sistema.id}}&param_busca={{sistema.nome}}">{{sistema.nome}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			</div>
+			<div class="row filtro">
+			{% if unidades %}
+			<div class="col-12">
+				<a class="mr-auto filter-button" data-toggle="collapse" href="#collapseUnidade" role="button" aria-expanded="false" aria-controls="collapseUnidade">Unidades</a><br>
+			</div>
+			<div class="collapse col-12" id="collapseUnidade">
+				<ul class="mb-2 pb=1">
+					{% for unidade in unidades %}
+						<li>
+							<a href="/tickets/unidades?unidade={{unidade.id}}&param_busca={{unidade.nome}}">{{unidade.nome}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			</div>
+			<div class="row filtro">
+			{% if users %}
+			<div class="col-12">
+				<a class="mr-auto filter-button" data-toggle="collapse" href="#collapseUsuario" role="button" aria-expanded="false" aria-controls="collapseUsuario">Usuarios</a><br>
+			</div>
+			<div class="collapse col-12" id="collapseUsuario">
+				<ul class="mb-2 pb=1">
+					{% for user in users %}
+						<li>
+							<a href="/tickets/users?user={{user.id}}&param_busca={{user.nome}}">{{user.nome}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="ModalTicket" tabindex="-1" role="dialog" aria-labelledby="TituloModalTicket" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="TituloModalTicket">Ticket <span id="ticket_id"></span></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<table class="table">
+					<tr>
+						<td>Aberto por:</td><td class="font-weight-bold" id="nome_usuario"></td>
+						<td>Para:</td><td class="font-weight-bold" id="empresa_nome"></td>
+						<td class="font-weight-bold" id="empresa_cnpj"></td>
+					</tr>
+					<tr>
+						<td>Contato:</td><td class="font-weight-bold" id="nome_contato"></td>
+						<td>telefone:</td><td class="font-weight-bold" id="telefone_contato"></td>
+						<td class="font-weight-bold" id="unidade_nome"></td>
+					</tr>
+				</table>
+				<table class="table">
+					<tr>
+						<th>Categoria</td>
+						<th>Subcategoria</td>
+						<th>Classificação</td>
+						<th>Operação</td>
+						<th>Estado Atual</td>
+					</tr>
+					<tr>
+						<td id="categoria"></td>
+						<td id="subcategoria"></td>
+						<td id="classificacao"></td>
+						<td id="operacao"></td>
+						<td id="estado"></td>
+					</tr>
+				</table>
+				<div class="container-interacoes row" style="max-height: 400px; overflow-x: auto;">
+					<div class="interacoes col-11 mx-auto">
+					</div>
+				</div>
+				<div class="form-interacao">
+					<form id="form-nova-interacao">
+						{% csrf_token %}
+						<div class="form-group col-md-12 mb-4">
+		                    <label for="estados_ticket">Estados:</label>
+		                    <select class="form-control" id="estados_ticket" name="estados_ticket" required>
+		                    </select>
+		                </div>
+						<div class="form-group col-md-12 mb-4">
+							<label for="descricao_interacao">Descricao: </label>
+							<textarea type="text" class="form-control" id="descricao_interacao" name="descricao_interacao" required ></textarea>
+							<input type="submit" class="btn btn-secondary mt-2" value="Enviar Interação" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

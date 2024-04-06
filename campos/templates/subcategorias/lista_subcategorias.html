@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Unidades - Django Desk{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page"><a href="/">Home</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="/campos">Campos</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Subcategorias</li>
+    </ol>
+</nav>
+<div class="row">
+	<div class="col-12">
+		<form class="form-inline" id="search-form" method="GET">
+			<label class="sr-only" for="search">Buscar</label>
+			<div class="input-group mb-2 mr-sm-2">
+				<input type="text" class="form-control" id="search" name="search" placeholder="Buscar">
+				<div class="input-group-prepend">
+					<div class="input-group-text" id="">
+						<i class="fas fa-search" id="search-btn"></i>
+					</div>
+				</div>
+			</div>
+		</form>
+		<table class="table table-responsive talbe-bordered">
+			{% if subcategorias %}
+			<tr>
+				<th scope="col">Nome</th>
+				<th scope="col">Sistema</th>
+				<th scope="col">Ativo?</th>
+				<th scope="col">Operações</th>
+			</tr>
+				{% for subcategoria in subcategorias %}
+					<tr>
+						<td>{{subcategoria.nome}}</td>
+						<td>
+							{% for categoria in subcategoria.categoria.all %}
+								<li>{{categoria}}</li>
+							{% endfor %}
+						</td>
+						<td>
+							{% if not subcategoria.ativo %}
+							<span class="text-danger">
+								<i class="fas fa-minus-circle"></i>
+							</span>
+							{% else %}
+							<span class="text-success">
+								<i class="fas fa-plus-circle"></i>
+							</span>
+							{% endif %}
+						</td>
+						<td class="operacoes">
+							<a href="/campos/subcategorias/atualizar/{{subcategoria.id}}" class="text-success">
+								<i class="far fa-edit"></i>
+							</a> |
+							<!--<a href="/campos/subcategoria/deletar/{{subcategoria.id}}" class="text-danger delete-btn" rel="{{subcategoria.nome}}" data-toggle="tooltip" data-placement="top" title="Recurso ainda não disponível.">-->
+							<a href="/campos/subcategorias/deletar/{{subcategoria.id}}" class="text-danger delete-btn" rel="{{subcategoria.nome}}">
+								<i class="fas fa-trash-alt"></i>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+		</table>
+			<div class="pagination">
+				<span class="step-links">
+					{% if  subcategorias.has_previous %}
+					<span class="first-page">
+						<a href="?page=1">Primeira</a>
+					</span>
+
+						<a href="?page={{subcategorias.previous_page_number}}"><i class="fas fa-arrow-circle-left"></i></a>
+					{% endif %}
+					<span class="current">
+						{{subcategorias.number}} de {{subcategorias.paginator.num_pages}}
+					</span>
+					{% if subcategorias.has_next %}
+						<a href="?page={{subcategorias.next_page_number}}"><i class="fas fa-arrow-circle-right"></i></a>
+
+					<span class="last-page">
+						<a href="?page={{subcategorias.paginator.num_pages}}">Última</a>
+					</span>
+					{% endif %}
+				</span>
+			</div>
+	</div>
+	<div class="col-12">
+		<a href="/campos/subcategorias/cadastrar" class="btn btn-sm btn-primary"><i class="fas fa-plus-circle"></i> Cadastrar</a>
+	</div>
+</div>
+
+{% endblock %}
